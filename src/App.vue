@@ -1,17 +1,12 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import PolestarsList from './components/PolestarsList.vue'
 </script>
 
 <template>
   <header>
     <div class="wrapper">
-      <PolestarsList />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/h">Details</RouterLink>
-      </nav>
+      <PolestarsList :items="[1, 2, 3]" />
     </div>
   </header>
 
@@ -22,26 +17,6 @@ import PolestarsList from './components/PolestarsList.vue'
 header {
   line-height: 1.5;
   max-height: 100vh;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: list-item;
-  padding: 0 1rem;
 }
 
 @media (min-width: 1024px) {
@@ -59,15 +34,6 @@ nav a {
     display: flex;
     place-items: flex-start;
     flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
   }
 }
 </style>
