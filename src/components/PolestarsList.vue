@@ -8,8 +8,13 @@ defineProps(['items'])
     <h3>Polestars:</h3>
     <nav>
       <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/h">Details</RouterLink>
-      <RouterLink v-for="item in items" :key="item" :to="`/${item}`"> {{ item }}</RouterLink>
+      <RouterLink
+        v-for="item in items"
+        :key="item"
+        :to="{ name: 'details', params: { id: item } }"
+      >
+        {{ item }}</RouterLink
+      >
     </nav>
   </div>
 </template>

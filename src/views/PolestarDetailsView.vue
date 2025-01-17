@@ -1,5 +1,5 @@
 <template>
   <main>
-    <h1>Polestar details</h1>
+    <h1>Polestar {{ $route.params.id }} details</h1>
   </main>
 </template>
