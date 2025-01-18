@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-defineProps(['items'])
+const props = defineProps<{
+  items: { ItemId: number; Name: string }[]
+}>()
 </script>
 
 <template>
@@ -9,11 +11,11 @@ defineProps(['items'])
     <nav>
       <RouterLink to="/">Home</RouterLink>
       <RouterLink
-        v-for="item in items"
-        :key="item"
-        :to="{ name: 'details', params: { id: item } }"
+        v-for="item in props.items"
+        :key="item.ItemId"
+        :to="{ name: 'details', params: { id: item.ItemId } }"
       >
-        {{ item }}</RouterLink
+        {{ item.Name }}</RouterLink
       >
     </nav>
   </div>
