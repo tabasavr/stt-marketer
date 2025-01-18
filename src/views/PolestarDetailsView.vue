@@ -1,15 +1,29 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onMounted, ref, useTemplateRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import {
+  Chart,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+} from 'chart.js'
+
+Chart.register(LineController, LineElement, CategoryScale, LinearScale, PointElement)
 
 const route = useRoute()
 
 const history = ref([])
 fetchHistory()
 
+const canvas = useTemplateRef('canvas')
+let currentChart: Chart | null = null
+
 async function fetchHistory() {
   const historyResponse = await fetch('https://stt.rsbat.dev/history?id=' + route.params.id)
   history.value = await historyResponse.json()
+  updateChart()
 }
 
 watch(
@@ -19,13 +33,51 @@ watch(
     fetchHistory()
   },
 )
+
+onMounted(() => {
+  updateChart()
+})
+
+function updateChart() {
+  if (!canvas.value) {
+    console.log('Canvas not mounted, skipping')
+    return
+  }
+
+  if (currentChart != null) {
+    currentChart.destroy()
+    currentChart = null
+  }
+
+  const lastPrices = history.value.map((item) => {
+    // return item.LastPrice
+    return {
+      x: item.Timestamp,
+      y: item.LastPrice,
+    }
+  })
+
+  console.log(lastPrices)
+
+  const ctx = canvas.value.getContext('2d')
+  currentChart = new Chart(ctx, {
+    data: {
+      datasets: [
+        {
+          type: 'line',
+          label: 'Last sale price',
+          data: lastPrices,
+          fill: false,
+        },
+      ],
+    },
+  })
+}
 </script>
 
 <template>
   <main>
     <h1>Polestar {{ $route.params.id }} details</h1>
-    <template v-for="item in history">
-      {{ item }}
-    </template>
+    <canvas ref="canvas" />
   </main>
 </template>
