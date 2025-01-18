@@ -14,11 +14,11 @@ Chart.register(LineController, LineElement, CategoryScale, LinearScale, PointEle
 
 const route = useRoute()
 
-const history = ref([])
+const history = ref<{Timestamp: string, LastPrice: number}[]>([])
 fetchHistory()
 
 const canvas = useTemplateRef('canvas')
-let currentChart: Chart | null = null
+let currentChart: Chart<'line', unknown[]> | null = null
 
 async function fetchHistory() {
   const historyResponse = await fetch('https://stt.rsbat.dev/history?id=' + route.params.id)
@@ -60,18 +60,20 @@ function updateChart() {
   console.log(lastPrices)
 
   const ctx = canvas.value.getContext('2d')
-  currentChart = new Chart(ctx, {
-    data: {
-      datasets: [
-        {
-          type: 'line',
-          label: 'Last sale price',
-          data: lastPrices,
-          fill: false,
-        },
-      ],
-    },
-  })
+  if (ctx) {
+    currentChart = new Chart(ctx, {
+      data: {
+        datasets: [
+          {
+            type: 'line',
+            label: 'Last sale price',
+            data: lastPrices,
+            fill: false,
+          },
+        ],
+      },
+    })
+  }
 }
 </script>
 
