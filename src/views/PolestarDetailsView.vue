@@ -78,6 +78,21 @@ function updateChart() {
 <template>
   <main>
     <h1>Polestar {{ $route.params.id }} details</h1>
-    <canvas ref="canvas" />
+    <div id="canvas-container">
+      <canvas ref="canvas" />
+    </div>
   </main>
 </template>
+
+<style lang="css" scoped>
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+}
+
+#canvas-container {
+  flex: 1;
+}
+</style>
