@@ -14,7 +14,24 @@ Chart.register(LineController, LineElement, CategoryScale, LinearScale, PointEle
 
 const route = useRoute()
 
-const history = ref<{Timestamp: string, LastPrice: number}[]>([])
+interface PriceHistory {
+  id: number
+  name: string
+  history: PriceHistoryItem[]
+}
+
+interface PriceHistoryItem {
+  sold_last_day: number
+  buy_count: number
+  sell_count: number
+  high: number
+  low: number
+  last_price: number
+  count_at_low: number
+  timestamp: number
+}
+
+const history = ref<PriceHistory>({ id: 0, name: 'Loading...', history: [] })
 fetchHistory()
 
 const canvas = useTemplateRef('canvas')
@@ -29,7 +46,7 @@ async function fetchHistory() {
 watch(
   () => route.params.id,
   () => {
-    history.value = []
+    history.value = { id: 0, name: 'Loading...', history: [] }
     fetchHistory()
   },
 )
@@ -49,11 +66,11 @@ function updateChart() {
     currentChart = null
   }
 
-  const lastPrices = history.value.map((item) => {
+  const lastPrices = history.value.history.map((item) => {
     // return item.LastPrice
     return {
-      x: item.Timestamp,
-      y: item.LastPrice,
+      x: new Date(item.timestamp * 1000).toLocaleString(),
+      y: item.last_price,
     }
   })
 
@@ -79,7 +96,7 @@ function updateChart() {
 
 <template>
   <main>
-    <h1>Polestar {{ $route.params.id }} details</h1>
+    <h1>{{ history.name }} price history</h1>
     <div id="canvas-container">
       <canvas ref="canvas" />
     </div>
