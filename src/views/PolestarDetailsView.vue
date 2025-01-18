@@ -31,7 +31,7 @@ interface PriceHistoryItem {
   timestamp: number
 }
 
-const history = ref<PriceHistory>({ id: 0, name: 'Loading...', history: [] })
+const history = ref<PriceHistory>({ id: 0, name: '', history: [] })
 fetchHistory()
 
 const canvas = useTemplateRef('canvas')
@@ -46,10 +46,15 @@ async function fetchHistory() {
 watch(
   () => route.params.id,
   () => {
-    history.value = { id: 0, name: 'Loading...', history: [] }
+    history.value = { id: 0, name: '', history: [] }
     fetchHistory()
   },
 )
+
+watch(history, () => {
+  console.log('History updated')
+  document.title = history.value.name + ' price history'
+})
 
 onMounted(() => {
   updateChart()
